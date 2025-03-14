@@ -54,7 +54,7 @@ axs[1].set_ylabel('Frequency')
 
 # Method 2: Creating a KDE-like smooth curve from the histogram points themselves
 # using interpolation (useful when you only have the histogram points)
-spline = interp.make_splrep(x_axis, y_axis, s=3)  # s controls smoothness
+spline = interp.make_splrep(x_axis, y_axis, s=len(x_axis))  # s controls smoothness
 x_smooth = np.linspace(min(x_axis), max(x_axis), 1000)
 y_smooth = interp.splev(x_smooth, spline)
 

@@ -67,3 +67,5 @@ axs[2].set_ylabel('Frequency')
 plt.show()
 
 #TODO Superpose smoothed graph on histogram
+#TODO Add Peak Finding Method
+#TODO Calibrate x_axis smooth point number

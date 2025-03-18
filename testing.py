@@ -1,58 +1,34 @@
-import matplotlib.pyplot as plt
-import scipy
 import numpy as np
-import matplotlib
-import scipy.interpolate as interp
+import matplotlib.pyplot as plt
+from scipy.stats import gaussian_kde
 
-from matplotlib import pyplot
-from scipy import stats
+# Generate some sample data - let's say these are measurements on an x-axis
+data = np.array([2.1, 2.3, 2.2, 2.7, 3.0, 3.1, 2.5, 2.8, 2.9, 3.2, 3.5, 3.7, 3.6, 4.0, 4.2, 4.1])
 
-np.random.seed(42)
-sample_data = np.concatenate([
-    np.random.normal(loc=5, scale=1, size=200),
-    np.random.normal(loc=10, scale=2, size=300)
-])
+# Create the kernel density estimator
+kde = gaussian_kde(data)
 
-# Extract histogram data
-counts, bin_edges = np.histogram(sample_data, bins=20)
-bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+# Create a range of x values to evaluate the KDE
+x_range = np.linspace(min(data) - 0.5, max(data) + 0.5, 1000)
 
-# These are our x and y values from the histogram
-x_values = bin_centers
-y_values = counts
-print(x_values, y_values)
+# Evaluate the KDE at those points
+kde_values = kde(x_range)
 
-# Create a figure with 1 subplot
-fig, ax = plt.subplots(figsize=(12, 6))
+# Plot the original data points, histogram, and the KDE
+plt.figure(figsize=(10, 6))
 
-# Plot the histogram data as a regular line plot (connecting bin heights)
-ax.plot(x_values, y_values, 'b-', linewidth=2, label='Histogram Line')
-ax.scatter(x_values, y_values, color='blue', s=30, alpha=0.7)
+# Plot KDE
+plt.plot(x_range, kde_values, 'r-', label='KDE', linewidth=2)
 
-# Method 2: Creating a KDE-like smooth curve from the histogram points themselves
-# using interpolation (useful when you only have the histogram points)
-spline = interp.make_splrep(x_values, y_values, s=3)  # s controls smoothness
-x_smooth = np.linspace(min(x_values), max(x_values), 1000)
-y_smooth = interp.splev(x_smooth, spline)
+# Plot histogram - normalize it to be on same scale as KDE
+hist_counts, hist_bins, _ = plt.hist(data, bins=8, alpha=0.4, density=True, color='blue', label='Histogram')
 
-# Plot the smoothed curve
-ax.plot(x_smooth, y_smooth, 'g--', linewidth=2, label='Smoothed histogram')
+# Plot the original data points
+plt.scatter(data, np.zeros_like(data), c='black', marker='|', s=100, label='Data points')
 
-# Add labels and legend
-ax.set_xlabel('Value', fontsize=12)
-ax.set_ylabel('Frequency', fontsize=12)
-ax.set_title('Line Plot and KDE from Histogram Data', fontsize=14)
-ax.legend(fontsize=10)
-ax.grid(alpha=0.3)
-
-# Add text explaining the methods
-ax.text(0.02, 0.97,
-        "Blue line: Raw histogram data points connected\n"
-        "Red line: KDE created from original sample data\n"
-        "Green dashed: Spline interpolation of histogram points",
-        transform=ax.transAxes, fontsize=10, verticalalignment='top',
-        bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
-
-plt.tight_layout()
+plt.title('Kernel Density Estimation vs Histogram')
+plt.xlabel('X value')
+plt.ylabel('Density')
+plt.legend()
+plt.grid(True, alpha=0.3)
 plt.show()
-

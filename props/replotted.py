@@ -60,4 +60,4 @@ axs[1].set_title('Replotted Histogram Data')
 axs[1].set_xlabel('Value')
 axs[1].set_ylabel('Frequency')
 
-plt.savefig(fname=r"C:\Users\Comp\Desktop\beamshit\ecgreplotted1000-10000.png")
+plt.savefig(fname=r"C:\Users\Comp\Desktop\beamline_props\ecgreplotted1000-10000.png")

@@ -66,4 +66,4 @@ scaled_kde_values = kde_values * scaling_factor
 axs.plot(x_range, scaled_kde_values, 'r--', label='KDE Estimated')
 axs.legend()
 
-plt.savefig(fname=r"C:\Users\Comp\Desktop\beamshit\ecgorigkde1000-10000.png")
+plt.savefig(fname=r"C:\Users\Comp\Desktop\beamline_props\ecgorigkde1000-10000.png")

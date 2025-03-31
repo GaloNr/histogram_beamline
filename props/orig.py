@@ -49,4 +49,4 @@ n, bins, patches = axs.hist(x=x_axis, bins=bin_number, density=True)
 axs.set_title('Original Histogram')
 axs.set_ylabel('Density')
 
-plt.savefig(fname=r"C:\Users\Comp\Desktop\beamshit\ecgorig1000-10000.png")
+plt.savefig(fname=r"C:\Users\Comp\Desktop\beamline_props\ecgorig1000-10000.png")

@@ -67,4 +67,4 @@ axs[1].set_xlabel('Value')
 axs[1].set_ylabel('Frequency')
 axs[1].legend()
 
-plt.savefig(fname=r"C:\Users\Comp\Desktop\beamshit\ecgsmooth1000-10000.png")
+plt.savefig(fname=r"C:\Users\Comp\Desktop\beamline_props\ecgsmooth1000-10000.png")

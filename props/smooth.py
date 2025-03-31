@@ -35,49 +35,22 @@ def data_reader(filename: str = None):
     return bin_number, x_axis
 
 
-bin_number, x_axis = data_reader(filename="ecg_dataset.txt")
+bin_number, x_axis = data_reader(filename=r"C:\Users\Comp\PycharmProjects\histogram_beamline\ecg_dataset.txt")
 print(x_axis)
 if bin_number == None:
     bin_number = len(histogram_bin_edges(x_axis, bins='scott'))
 print(bin_number)
 
 np.random.seed(42)
-fig, axs = pyplot.subplots(ncols=4, nrows=1, figsize=(12, 8))
+fig, axs = pyplot.subplots(ncols=2, nrows=1, figsize=(18, 16))
 
-# Original histogram with KDE overlay
 n, bins, patches = axs[0].hist(x=x_axis, bins=bin_number, density=True)
-axs[0].set_title('Original Histogram with KDE')
-axs[0].set_ylabel('Density')
-
-# Calculate KDE with proper scaling
-kde = gaussian_kde(dataset=x_axis, bw_method='silverman')
-bin_width = bins[1] - bins[0]
-hist_area = sum(n) * bin_width
-x_range = np.linspace(min(x_axis), max(x_axis), 1000)
-
-# Scale KDE to match histogram height
-kde_values = kde.evaluate(x_range)
-max_kde = np.max(kde_values)
-max_hist = np.max(n)
-scaling_factor = max_hist / max_kde
-scaled_kde_values = kde_values * scaling_factor
-
-# Overlay scaled KDE on original histogram
-axs[0].plot(x_range, scaled_kde_values, 'r--', label='KDE Estimated')
-axs[0].legend()
-
 
 # Replotted histogram data
 midpoints = (bins[:-1] + bins[1:]) / 2
 histogram_data = np.column_stack((midpoints, n))
 x_axis_hist = list(histogram_data[:, 0])
 y_axis_hist = list(histogram_data[:, 1])
-
-axs[1].plot(x_axis_hist, y_axis_hist, 'rx-')
-axs[1].set_title('Replotted Histogram Data')
-axs[1].set_xlabel('Value')
-axs[1].set_ylabel('Frequency')
-
 
 # Smoothed curve with peak finding (method may be inaccurate)
 spline = interp.make_splrep(x_axis_hist, y_axis_hist, s=len(x_axis_hist) / 10000)
@@ -86,27 +59,12 @@ y_smooth = interp.splev(x_smooth, spline)
 
 peaks, _ = find_peaks(y_smooth, height=np.max(y_smooth) * 0.3, distance=20)
 
-axs[2].plot(x_smooth, y_smooth, 'b-', linewidth=2, label='Smoothed histogram')
-axs[2].scatter(x_smooth[peaks], y_smooth[peaks], color='red', marker='^',
+axs[1].plot(x_smooth, y_smooth, 'b-', linewidth=2, label='Smoothed histogram')
+axs[1].scatter(x_smooth[peaks], y_smooth[peaks], color='red', marker='^',
                label='Peaks', zorder=5)
-axs[2].set_title('Smoothed Histogram with Peaks')
-axs[2].set_xlabel('Value')
-axs[2].set_ylabel('Frequency')
-axs[2].legend()
+axs[1].set_title('Smoothed Histogram with Peaks')
+axs[1].set_xlabel('Value')
+axs[1].set_ylabel('Frequency')
+axs[1].legend()
 
-
-# KDE estimation
-kde_values = kde.evaluate(x_range)
-axs[3].plot(x_range, kde_values, 'g.-', label='KDE Estimated')
-axs[3].set_title('KDE Estimated')
-axs[3].set_xlabel('Value')
-axs[3].set_ylabel('Density')
-axs[3].legend()
-
-
-plt.tight_layout()
-plt.show()
-
-#TODO Check and adjust frequency densities of the bins
-#TODO Recolor the graphs
-#TODO Possibly generate more props
+plt.savefig(fname=r"C:\Users\Comp\Desktop\beamshit\ecgsmooth1000-10000.png")
